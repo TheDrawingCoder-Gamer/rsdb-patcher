@@ -1,0 +1,21 @@
+[package]
+name = "rsdb-merge-app"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "rsdb_merger"
+path = "src/lib.rs"
+
+[[example]]
+name = "merger"
+
+[dev-dependencies]
+anyhow = "1.0.89"
+clap = { version = "4.5.20", features = ["derive"] }
+zstd = "0.13.2"
+
+[dependencies]
+roead = { version = "1.0.0", features = [ "byml", "yaml"] }
+rustc-hash = "2.0.0"
+thiserror = "1.0.64"
