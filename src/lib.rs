@@ -6,8 +6,8 @@ use thiserror::Error;
 
 #[derive(Error, Debug)]
 pub enum MergeError {
-    #[error("mismatch in types (got {1} expected {0})")]
-    Mismatch(String, String)
+    #[error("mismatch in types (got {1:?} expected {0})")]
+    Mismatch(String, Byml)
 }
 
 
@@ -46,7 +46,7 @@ pub fn merge_byml_raw(base: &mut Byml, patch: &Byml) -> Result<(), MergeError> {
            if let Byml::Map(patch_map) = patch {
                 merge_byml_hashmap(da_map, patch_map)?;
            } else {
-                return Result::Err(MergeError::Mismatch("Map".to_string(), format!("{:?}", patch)));
+                return Result::Err(MergeError::Mismatch("Map".to_string(), patch.clone()));
            } 
         },
         Byml::Array(arr) => {
@@ -65,7 +65,7 @@ pub fn merge_byml_raw(base: &mut Byml, patch: &Byml) -> Result<(), MergeError> {
                    }
                 },
                 _ => {
-                    return Result::Err(MergeError::Mismatch("Array".to_string(), format!("{:?}", patch)));
+                    return Result::Err(MergeError::Mismatch("Array".to_string(), patch.clone()));
                 }
             } 
         },
@@ -73,19 +73,19 @@ pub fn merge_byml_raw(base: &mut Byml, patch: &Byml) -> Result<(), MergeError> {
             if let Byml::HashMap(patch_map) = patch {
                 merge_byml_hashmap(hashmap, patch_map)?;
             } else {
-                return Result::Err(MergeError::Mismatch("HashMap".to_string(), format!("{:?}", patch)));
+                return Result::Err(MergeError::Mismatch("HashMap".to_string(), patch.clone()));
             }
         },
         Byml::ValueHashMap(vhashmap) => {
             if let Byml::ValueHashMap(patch_map) = patch {
                 merge_byml_value_hashmap(vhashmap, patch_map)?;
             } else {
-                return Result::Err(MergeError::Mismatch("ValueHashMap".to_string(), format!("{:?}", patch)));
+                return Result::Err(MergeError::Mismatch("ValueHashMap".to_string(), patch.clone()));
             }
         },
         _ => {
             if discriminant(base) != discriminant(patch) {
-                return Result::Err(MergeError::Mismatch(format!("{:?}", base), format!("{:?}", patch)));
+                return Result::Err(MergeError::Mismatch(format!("{:?}", base), patch.clone()));
             }
             *base = patch.clone();
         }
