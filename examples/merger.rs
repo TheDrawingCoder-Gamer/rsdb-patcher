@@ -1,7 +1,7 @@
 use roead::byml::Byml;
 use clap::Parser;
 use std::io::Write;
-use rsdb_merger::merge_byml_raw;
+use rsdb_patcher::merge_byml_raw;
 use std::path::PathBuf;
 
 #[derive(Parser, Debug)]

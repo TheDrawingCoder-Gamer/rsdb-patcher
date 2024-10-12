@@ -1,10 +1,10 @@
 [package]
-name = "rsdb-merge-app"
+name = "rsdb-patcher"
 version = "0.1.0"
 edition = "2021"
 
 [lib]
-name = "rsdb_merger"
+name = "rsdb_patcher"
 path = "src/lib.rs"
 
 [[example]]

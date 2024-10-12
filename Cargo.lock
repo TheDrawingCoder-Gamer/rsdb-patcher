@@ -561,7 +561,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "rsdb-merge-app"
+name = "rsdb-patcher"
 version = "0.1.0"
 dependencies = [
  "anyhow",
