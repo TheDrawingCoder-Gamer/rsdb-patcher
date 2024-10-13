@@ -32,7 +32,7 @@ fn main() -> anyhow::Result<()> {
             let patch_file = std::fs::read_to_string(file)?;
             Byml::from_text(patch_file)?
         };
-        merge_byml_raw(&mut base, &patch)?;
+        merge_byml_raw(&mut base, patch)?;
     }
     // todo: get endian info. s3 uses little endian
     let base_res = base.to_binary(roead::Endian::Little);
