@@ -92,8 +92,8 @@ pub fn merge_byml_raw(base: &mut Byml, patch: &Byml) -> Result<(), MergeError> {
     }
     return Result::Ok(());
 }
-pub fn merge_byml(base: &Byml, patch: &Byml) -> Result<Byml, MergeError> {
-    let mut res = base.clone();
+pub fn merge_byml(base: Byml, patch: &Byml) -> Result<Byml, MergeError> {
+    let mut res = base;
     merge_byml_raw(&mut res, patch)?;
     Result::Ok(res)
 }
