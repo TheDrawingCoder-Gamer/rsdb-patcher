@@ -11,21 +11,21 @@ pub enum MergeError {
 }
 
 
-fn merge_byml_hashmap<T: Hash + Eq + Clone>(base: &mut FxHashMap<T, Byml>, patch: FxHashMap<T, Byml>) -> Result<(), MergeError> {
+fn merge_byml_hashmap<T: Hash + Eq>(base: &mut FxHashMap<T, Byml>, patch: FxHashMap<T, Byml>) -> Result<(), MergeError> {
     for (p_key, p_val) in patch.into_iter() {
         match base.get_mut(&p_key) {
             Some(b_val) => {
                 merge_byml_raw(b_val, p_val)?; 
             }
             _ => {
-                base.insert(p_key.clone(), p_val.clone());
+                base.insert(p_key, p_val);
             }
         }
         
     }
     Result::Ok(())
 }
-fn merge_byml_value_hashmap<T: Hash + Eq + Clone>(base: &mut FxHashMap<T, (Byml, u32)>, patch: FxHashMap<T, (Byml, u32)>) -> Result<(), MergeError> {
+fn merge_byml_value_hashmap<T: Hash + Eq>(base: &mut FxHashMap<T, (Byml, u32)>, patch: FxHashMap<T, (Byml, u32)>) -> Result<(), MergeError> {
     for (p_key, p_val) in patch.into_iter() {
         match base.get_mut(&p_key) {
             Some(b_val) => {
@@ -33,7 +33,7 @@ fn merge_byml_value_hashmap<T: Hash + Eq + Clone>(base: &mut FxHashMap<T, (Byml,
                 b_val.1 = p_val.1;
             }
             _ => {
-                base.insert(p_key.clone(), p_val.clone());
+                base.insert(p_key, p_val);
             }
         }
     }
@@ -46,7 +46,7 @@ pub fn merge_byml_raw(base: &mut Byml, patch: Byml) -> Result<(), MergeError> {
            if let Byml::Map(patch_map) = patch {
                 merge_byml_hashmap(da_map, patch_map)?;
            } else {
-                return Result::Err(MergeError::Mismatch("Map".to_string(), patch.clone()));
+                return Result::Err(MergeError::Mismatch("Map".to_string(), patch));
            } 
         },
         Byml::Array(arr) => {
@@ -65,7 +65,7 @@ pub fn merge_byml_raw(base: &mut Byml, patch: Byml) -> Result<(), MergeError> {
                    }
                 },
                 _ => {
-                    return Result::Err(MergeError::Mismatch("Array".to_string(), patch.clone()));
+                    return Result::Err(MergeError::Mismatch("Array".to_string(), patch));
                 }
             } 
         },
@@ -73,21 +73,21 @@ pub fn merge_byml_raw(base: &mut Byml, patch: Byml) -> Result<(), MergeError> {
             if let Byml::HashMap(patch_map) = patch {
                 merge_byml_hashmap(hashmap, patch_map)?;
             } else {
-                return Result::Err(MergeError::Mismatch("HashMap".to_string(), patch.clone()));
+                return Result::Err(MergeError::Mismatch("HashMap".to_string(), patch));
             }
         },
         Byml::ValueHashMap(vhashmap) => {
             if let Byml::ValueHashMap(patch_map) = patch {
                 merge_byml_value_hashmap(vhashmap, patch_map)?;
             } else {
-                return Result::Err(MergeError::Mismatch("ValueHashMap".to_string(), patch.clone()));
+                return Result::Err(MergeError::Mismatch("ValueHashMap".to_string(), patch));
             }
         },
         _ => {
             if discriminant(base) != discriminant(&patch) {
-                return Result::Err(MergeError::Mismatch(format!("{:?}", base), patch.clone()));
+                return Result::Err(MergeError::Mismatch(format!("{:?}", base), patch));
             }
-            *base = patch.clone();
+            *base = patch;
         }
     }
     return Result::Ok(());
