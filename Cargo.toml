@@ -5,7 +5,7 @@ edition = "2021"
 
 [features]
 default = ["std"]
-std = []
+std = ["dep:thiserror"]
 
 [lib]
 name = "rsdb_patcher"
@@ -15,4 +15,4 @@ path = "src/lib.rs"
 [dependencies]
 roead = { version = "1.0.0", features = [ "byml", "yaml"] }
 rustc-hash = "2.0.0"
-thiserror = "1.0.64"
+thiserror = { version = "1.0.64", optional = true }
