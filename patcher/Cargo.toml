@@ -1,0 +1,11 @@
+[package]
+name = "rsdb-patcher-app"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.89"
+clap = { version = "4.5.20", features = ["derive"] }
+zstd = "0.13.2"
+rsdb-patcher = { path = "../" }
+roead = { version = "1.0.0", features = [ "byml", "yaml"] }

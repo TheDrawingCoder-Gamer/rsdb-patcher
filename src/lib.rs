@@ -1,12 +1,21 @@
+#![cfg_attr(not(feature = "std"), no_std)]
+
+extern crate alloc;
+
+use alloc::format;
+use alloc::string::String;
 use rustc_hash::FxHashMap;
 use roead::byml::Byml;
-use std::mem::discriminant;
-use std::hash::Hash;
+use core::mem::discriminant;
+#[cfg(feature = "std")]
 use thiserror::Error;
+use core::hash::Hash;
+use alloc::string::ToString;
 
-#[derive(Error, Debug)]
+#[cfg_attr(feature = "std", derive(Error))]
+#[derive(Debug)]
 pub enum MergeError {
-    #[error("mismatch in types (got {1:?} expected {0})")]
+    #[cfg_attr(feature = "std", error("mismatch in types (got {1:?} expected {0})"))]
     Mismatch(String, Byml)
 }
 
@@ -39,7 +48,7 @@ fn merge_byml_value_hashmap<T: Hash + Eq>(base: &mut FxHashMap<T, (Byml, u32)>, 
     }
     Result::Ok(())
 }
-// raw. this can cause issues bc midway jank
+/// Apply `patch` to `base` in place. May cause partial patch if result is ignored.
 pub fn merge_byml_raw(base: &mut Byml, patch: Byml) -> Result<(), MergeError> {
     match base {
         Byml::Map(da_map) => {
@@ -92,6 +101,8 @@ pub fn merge_byml_raw(base: &mut Byml, patch: Byml) -> Result<(), MergeError> {
     }
     return Result::Ok(());
 }
+
+/// Apply patches from `patch` to `base`. Moves `base` so it's never in an incomplete state.
 pub fn merge_byml(base: Byml, patch: Byml) -> Result<Byml, MergeError> {
     let mut res = base;
     merge_byml_raw(&mut res, patch)?;

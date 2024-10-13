@@ -3,17 +3,14 @@ name = "rsdb-patcher"
 version = "0.1.0"
 edition = "2021"
 
+[features]
+default = ["std"]
+std = []
+
 [lib]
 name = "rsdb_patcher"
 path = "src/lib.rs"
 
-[[example]]
-name = "merger"
-
-[dev-dependencies]
-anyhow = "1.0.89"
-clap = { version = "4.5.20", features = ["derive"] }
-zstd = "0.13.2"
 
 [dependencies]
 roead = { version = "1.0.0", features = [ "byml", "yaml"] }

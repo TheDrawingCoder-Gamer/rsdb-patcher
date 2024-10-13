@@ -1,4 +1,5 @@
 /target
+*/target
 *.byml
 *.zs
 *.yml
